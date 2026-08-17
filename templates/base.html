@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu Site</title>
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+</head>
+<body>
+
+    <!-- É aqui que a mágica acontece: o Django joga o conteúdo do home.html aqui dentro -->
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>
+
+<script>
+    setInterval(function() {
+        console.clear();
+        debugger; 
+    }, 1000);
+
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'F12' || 
+            (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J' || event.key === 'C')) || 
+            (event.ctrlKey && event.key === 'U')) {
+            event.preventDefault();
+            alert('Esta ação não é permitida.');
+        }
+    });
+
+    document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+    });
+</script>
