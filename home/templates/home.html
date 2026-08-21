@@ -10,8 +10,7 @@
                     <img src="{{ product.product_image.url }}"  alt="{{ product.name_product }}" width="300" height="300">
                     <p>{{ product.name_product }}</p>
                     <p>{{ product.stock_quantity }}</p>
-                    <a href="http://localhost:8501/">detalhes do produto</a>
-                </div>
+                    <a href="{{ STREAMLIT_URL }}/?product_id={{ product.id }}" target="_blank">detalhes do produto</a>                </div>
             {% endfor %}
 
         </div>

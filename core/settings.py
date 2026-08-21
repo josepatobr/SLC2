@@ -1,6 +1,5 @@
 from pathlib import Path
 import os
-import django
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -112,4 +111,7 @@ USE_TZ = True
 STATIC_ROOT = str(BASE_DIR / "staticfiles")
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [str(BASE_DIR / "static")]
+
+STREAMLIT_URL = os.getenv("STREAMLIT_URL", "http://localhost:8501")
+
 
