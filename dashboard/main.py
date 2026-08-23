@@ -49,6 +49,7 @@ def dashboard():
                 'Vendas': v.quantity_out,
                 'Estoque': produto.stock_quantity
             })
+    st.bar_chart(quantity_table)
 
     st.write("planilha focada na economia do produto")
 
@@ -65,7 +66,6 @@ def dashboard():
 
        
 
-    st.bar_chart(quantity_table)
     st.line_chart(economy_table)
 
 
