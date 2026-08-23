@@ -36,15 +36,11 @@ class Product(models.Model):
 
     seller = models.ForeignKey(Seller, on_delete=models.SET_NULL, blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, blank=True, null=True)
-    
     name_product = models.CharField(max_length=200)
     stock_quantity = models.IntegerField(default=0) 
 
-
-    price = models.FloatField(default=0)
+    price = models.FloatField(default=0, verbose_name=f"Preço de venda (R$)")
     price_restocking = models.FloatField(verbose_name="Preço para reabastecer", default=0)
-    profits = models.FloatField(default=0)
-
 
     sku = models.CharField(max_length=50, unique=True)
     product_image = models.ImageField(upload_to='products/')
@@ -54,12 +50,6 @@ class Product(models.Model):
         return self.name_product
     
     def save(self, *args, **kwargs):
-        sales_gain = self.profits
-        cost_replenish = self.price_restocking
-
-        self.total_profits = sales_gain - cost_replenish
-     
-        
         if self.stock_quantity > 0:
             self.product_status = ProductStatus.IN_STOCK
         else:
