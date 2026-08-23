@@ -38,8 +38,13 @@ class Product(models.Model):
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, blank=True, null=True)
     
     name_product = models.CharField(max_length=200)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     stock_quantity = models.IntegerField(default=0) 
+
+
+    price = models.FloatField(default=0)
+    price_restocking = models.FloatField(verbose_name="Preço para reabastecer", default=0)
+    profits = models.FloatField(default=0)
+
 
     sku = models.CharField(max_length=50, unique=True)
     product_image = models.ImageField(upload_to='products/')
@@ -49,27 +54,41 @@ class Product(models.Model):
         return self.name_product
     
     def save(self, *args, **kwargs):
+        sales_gain = self.profits
+        cost_replenish = self.price_restocking
+
+        self.total_profits = sales_gain - cost_replenish
+     
+        
         if self.stock_quantity > 0:
             self.product_status = ProductStatus.IN_STOCK
         else:
             self.product_status = ProductStatus.EXHAUSTED
         super().save(*args, **kwargs)
 
+        
 
 class StockMovement(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity_out = models.IntegerField(verbose_name="Quantidade Retirada")
-    date_moved = models.DateTimeField(auto_now_add=True, verbose_name="Data da Saída")
+    quantity_out = models.IntegerField(verbose_name="Quantidades vendidas")
+    date_moved = models.DateTimeField(auto_now_add=True, verbose_name="Data da venda")
+    profits = models.FloatField(default=0, verbose_name="Lucro da Venda")
 
     def __str__(self):
-        return f"Saída de {self.quantity_out} unidade(s) de {self.product.name_product}"
+        return f"Foi vendido o total de: {self.quantity_out} unidade(s) do produto: {self.product.name_product}"
 
-    def save_stock_quantity(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
+        if self.product:
+            total_sales = float(self.product.price) * self.quantity_out
+            self.profits = total_sales - self.product.price_restocking
+
         with transaction.atomic():
+            is_new = self.pk is None
             super().save(*args, **kwargs)
 
-        type((self.product)).objects.filter(pk=self.product.pk).update(
-            stock_quantity=self.product('stock_quantity') - self.quantity_out
-        )
-        
-        self.product.refresh_from_db(fields=['stock_quantity'])
+        if is_new:
+            Product.objects.filter(pk=self.product.pk).update(
+                stock_quantity=models.F('stock_quantity') - self.quantity_out
+                )
+            self.product.refresh_from_db(fields=['stock_quantity'])
+
