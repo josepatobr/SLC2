@@ -13,6 +13,8 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 from stock.models import Product, StockMovement
+import streamlit.components.v1 as components
+
 
 st.title("📊 Painel de Detalhes do Produto")
 
@@ -34,8 +36,17 @@ def dashboard():
 
     price = produto.price
 
-    st.write(f"**Produto:** {produto.name_product}")
-    st.write(f"**Preço:** R$ {price}")
+
+    components.html(
+        f"""
+        <div style="border: 1px solid green; border-radius: 3px; padding: 20px; color: white;
+        ">
+          {produto.name_product}
+          {price}
+        </div>  
+        """,
+        height=80,
+    )
 
 
     st.write("planilha focada no armazenamento do produto")
