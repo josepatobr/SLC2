@@ -9,10 +9,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 import django
 django.setup()
 
-import numpy as np
-import pandas as pd
 import streamlit as st
-from stock.models import Product, StockMovement
+from stock.models import Product, StockMovement, Seller, Company
 import streamlit.components.v1 as components
 
 
@@ -39,47 +37,112 @@ def dashboard():
 
     components.html(
         f"""
-        <div style="border: 1px solid green; border-radius: 3px; padding: 20px; color: white;
+        <div style="font-size: 50px; color:white; justify-content: center; text-align: center; underline: underline;
         ">
           {produto.name_product}
-          {price}
         </div>  
         """,
-        height=80,
+        height=100,
     )
 
 
-    st.write("planilha focada no armazenamento do produto")
+    st.markdown("---")
+
+
+    components.html(
+        f"""
+        <div style="color: white; font-size: 20px; color:white; justify-content: center; text-align: center
+        ">
+          planilha focada no armazenamento do produto
+        </div>  
+        """,
+        height=50,
+    )
+
+
+    #Dados de vendas e estoque para o gráfico
+    vendas = ["10", "20", "30", "40", "50", "60", "70", "80", "90",  ]
+    estoque = ["100", "90", "80", "70", "60", "50", "40", "30", "20", ]
+    data = ['2023-01-01', '2023-02-01', '2023-03-01', '2023-04-01', '2023-05-01',  '2023-07-01', '2023-08-01', '2023-09-01', '2023-10-01', ]
+    mes = ['mes 1', 'mes 2', 'mes 3', 'mes 4', 'mes 5', 'mes 6', 'mes 7', 'mes 8', 'mes 9',]
 
     quantity_table = []
-    for v in vendas:
-        data_mov = pd.to_datetime(v.date_moved)
+    for i in range(len(vendas)):
         quantity_table.append({
-                'Data': data_mov,
-                'Mes': data_mov.strftime('%b').capitalize(), 
-                'Vendas': v.quantity_out,
-                'Estoque': produto.stock_quantity
-            })
-    st.bar_chart(quantity_table)
+            'Mes': mes[i], 
+            'Vendas obtidas': int(vendas[i]),
+            'Estoque restante': int(estoque[i])
+        })
 
-    st.write("planilha focada na economia do produto")
+    st.bar_chart(quantity_table, x='Mes', y=['Vendas obtidas', 'Estoque restante'])
 
+
+    st.markdown("---")
+
+
+    components.html(
+        f"""
+        <div style="color: white; font-size: 20px; color:white; justify-content: center; text-align: center
+        ">
+          planilha focada na economia do produto
+        </div>  
+        """,
+        height=50,
+    )
+
+
+    Vendas = ["10", "20", "30", "40", "50", "60", "70", "80", "90"]
+    lucros = ["100", "200", "300", "400", "500", "600", "700", "800", "900"]
+    gastos_reabastecimento = ["50", "100", "150", "200", "250", "300", "350", "400", "450"]
+    mes = ['mes 1', 'mes 2', 'mes 3', 'mes 4', 'mes 5', 'mes 6', 'mes 7', 'mes 8', 'mes 9']
+
+    totais = []
+
+    for i in range(len(lucros)):
+        subtracao = int(lucros[i]) - int(gastos_reabastecimento[i])
+        totais.append(subtracao)
 
     economy_table = []
-    for v in vendas: 
+    for i in range(len(vendas)):
       economy_table.append({
-        'Vendas': v.quantity_out,
-        'lucros': v.profits,
-        'gastos com o reabastecemento': produto.price_restocking,
-        })
-      if not v.profits:
-        st.error("erro ao mostrar o lucro")
+        'Mes': mes[i], 
+        'Vendas': int(Vendas[i]),
+        'lucros': int(lucros[i]),
+        'gastos': int(gastos_reabastecimento[i]),
+        'Total': int(totais[i])  
+      })
 
-       
-
-    st.line_chart(economy_table)
+    st.line_chart(economy_table, x='Mes', y=['Vendas', 'lucros', 'gastos', 'Total'])
 
 
+    #falta arrumar isso
+    components.html(
+      f"""
+        <div style="display: flex; justify-content: center; align-items: center; height: 50px;">
+          <a href="/dashboard/details?product_id={produto_id}" 
+            style="color: white; background-color: gray; padding: 10px 20px; border-radius: 5px;">
+            Mais detalhes sobre a data da venda
+          </a>
+        </div>
+      """,
+      height=70,
+    )
+    
+
+
+    seller = Seller.objects.filter(id=produto.seller_id).first()
+    company = Company.objects.filter(id=produto.company_id).first()
+
+    st.markdown("---")
+    st.markdown("<p style='text-align: center; color: gray;'>© 2026 - Informações do Produto</p>", unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown(f"**Vendedor:** {seller.name}  \n **Email:** {seller.email}  \n **Empresa:** {company.name}")
+
+    with col2:
+        st.markdown(f"**Empresa:** {company.name}  \n **Telefone:** {company.number}  \n **Endereço:** {company.ender}")
   except Product.DoesNotExist:
     st.error("Produto não encontrado no banco de dados.")
 
