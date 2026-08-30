@@ -1,6 +1,8 @@
 import sys
 import os
 
+
+#isso é necessario para fundir o streamlit com o django
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
@@ -8,6 +10,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 
 import django
 django.setup()
+#------
+
 
 import streamlit as st
 from stock.models import Product, StockMovement, Seller, Company
@@ -17,22 +21,25 @@ import streamlit.components.v1 as components
 st.title("📊 Painel de Detalhes do Produto")
 
 
+home = "http://localhost:8000/cassino/home/"
+
 def dashboard():
+  #aqui eu pego o id do url
   produto_id = st.query_params.get("product_id")
 
   if not produto_id:
     st.warning("o produto não foi encontrado.")
     return
 
+  #se conseguir pegar o ID ele vai transformar ele numa variavel
   try:
     produto = Product.objects.get(id=produto_id)
 
+    #aqui filtro as vendas pelo id do produto e filtro por data
     vendas = StockMovement.objects.filter(product_id=produto_id).order_by("date_moved")
     if not vendas.exists():
         st.info("Ainda não há movimentações registradas para este produto.")
         return
-
-    price = produto.price
 
 
     components.html(
@@ -60,12 +67,12 @@ def dashboard():
     )
 
 
-    #Dados de vendas e estoque para o gráfico
+    #dados de exemplos para a simulaçao
     vendas = ["10", "20", "30", "40", "50", "60", "70", "80", "90",  ]
     estoque = ["100", "90", "80", "70", "60", "50", "40", "30", "20", ]
-    data = ['2023-01-01', '2023-02-01', '2023-03-01', '2023-04-01', '2023-05-01',  '2023-07-01', '2023-08-01', '2023-09-01', '2023-10-01', ]
     mes = ['mes 1', 'mes 2', 'mes 3', 'mes 4', 'mes 5', 'mes 6', 'mes 7', 'mes 8', 'mes 9',]
 
+    #aq eu crio uma lista vazia, e logo em seguida adiciono as variaveis dentro dela
     quantity_table = []
     for i in range(len(vendas)):
         quantity_table.append({
@@ -90,7 +97,7 @@ def dashboard():
         height=50,
     )
 
-
+  #mesma coisa que o outro
     Vendas = ["10", "20", "30", "40", "50", "60", "70", "80", "90"]
     lucros = ["100", "200", "300", "400", "500", "600", "700", "800", "900"]
     gastos_reabastecimento = ["50", "100", "150", "200", "250", "300", "350", "400", "450"]
@@ -114,21 +121,8 @@ def dashboard():
 
     st.line_chart(economy_table, x='Mes', y=['Vendas', 'lucros', 'gastos', 'Total'])
 
-
-    #falta arrumar isso
-    components.html(
-      f"""
-        <div style="display: flex; justify-content: center; align-items: center; height: 50px;">
-          <a href="/dashboard/details?product_id={produto_id}" 
-            style="color: white; background-color: gray; padding: 10px 20px; border-radius: 5px;">
-            Mais detalhes sobre a data da venda
-          </a>
-        </div>
-      """,
-      height=70,
-    )
-    
-
+    st.link_button("Ir para Home", home)
+        
 
     seller = Seller.objects.filter(id=produto.seller_id).first()
     company = Company.objects.filter(id=produto.company_id).first()

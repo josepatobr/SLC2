@@ -1,19 +1,38 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Meu Site</title>
-    <link href="{% static 'css/home.css' %}" rel="stylesheet">
-</head>
-<body>
 
-    <!-- É aqui que a mágica acontece: o Django joga o conteúdo do home.html aqui dentro -->
-    {% block content %}
-    {% endblock %}
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SLC2</title>
+        <link href="{% static 'css/home.css' %}" rel="stylesheet">
+        <link href="{% static 'css/base.css' %}" rel="stylesheet">
+        <link href="{% static 'css/dev.css' %}" rel="stylesheet">
 
-</body>
+
+    </head>
+
+    <body class="body">
+
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+        
+        <nav class="navbar">
+            <div class="nav-logo">
+                <a href="{% url 'home' %}">
+                    <img class="logo" src="{% static 'logo_empresa/logo_SLC2.png' %}" width="70" height="70" alt="Logo">
+                </a>            
+            </div>
+            <ul class="nav-links" id="nav-list">
+                <li><a class="option_navbar" href="{% url 'dev' %}">desenvolvedores</a></li>
+                <li><a class="option_navbar" href="#contact">contatos</a></li>
+            </ul>
+        </nav>
+
+    </body>
 </html>
 
 <script>

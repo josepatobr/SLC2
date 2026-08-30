@@ -2,16 +2,21 @@
 {% load static %}
 
 {% block content %}
-    <h1>vc esta no home</h1>
-        <div class="card-produto">
-            
+    <div class="home">    
+        <br><br>
+        <h1 class="titulo">SLC2</h1>
+    
+        <div class="card-produto">  
             {% for product in products %}
                 <div class="div-produto">
                     <img src="{{ product.product_image.url }}"  alt="{{ product.name_product }}" width="300" height="300">
-                    <p>{{ product.name_product }}</p>
-                    <p>{{ product.stock_quantity }}</p>
-                    <a href="{{ STREAMLIT_URL }}/?product_id={{ product.id }}" target="_blank">detalhes do produto</a>                </div>
+                    <p class="inf_produto_titulo">{{ product.name_product }}</p>
+                    <p id="inf_produto">R$: {{ product.price }}</p>
+                    <p id="inf_produto">em estoque: {{ product.stock_quantity }}</p>
+                    <a class="url_produto" href="{{ STREAMLIT_URL }}/?product_id={{ product.id }}" target="_blank">detalhes do produto</a>                
+                </div>
             {% endfor %}
 
         </div>
+    </div>
 {% endblock %}

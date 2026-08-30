@@ -1,0 +1,38 @@
+.body{
+    background-color: #111418;
+
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    background-color: #111418;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid white;
+}
+
+.logo{
+    display: flex;
+    padding-left: 75%;
+}
+
+
+.nav-links{    
+    color:transparent;
+    flex-direction: row;
+    display: flex;
+    font-size: 20px;
+    gap: 20px;
+    padding-right: 75%;
+    
+}
+
+.option_navbar{
+    color: white;
+    display: flex;
+    padding-right: 5px;
+}

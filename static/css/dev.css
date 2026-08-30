@@ -1,0 +1,24 @@
+.creditos-equipe{
+    display: flex;
+    color: white;
+    flex-direction: column;
+    align-items: center;
+}
+.titulo{
+    padding-bottom: 20px;
+    display: flex;
+    color: white;
+    text-align: center;
+    font-size: 40px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#titulos_cargo{
+    text-decoration: underline;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#responsavel{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+}
