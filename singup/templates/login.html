@@ -1,129 +1,40 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sing-Up</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+{% extends "base.html" %}
+{% load static %}
 
-        body {
-            background-color: #f4f7f6;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
+   {% block content %}
+<br><br><br>
+        <div>
+            <h1 class="title">SLC2</h1>
+            <p class="description">Bem vindo ao site SLC2, você ja possui uma conta?</p>
+        </div>
 
-        .messages {
-            list-style: none;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 400px;
-        }
+    <div class="father-pag-login">
+        
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+        <form class="form-login" id="id-login" method="POST">{% csrf_token %}
+            <h1 class="titulo-form">Login</h1>
+            <div class="inputs">
+                <input class="camp-inputs" type="email" placeholder="Digite seu email" id="input-email" name="email">
+                <input class="camp-inputs" type="password" placeholder="Digite sua senha" id="input-password" name="password">
+            </div>
+            
+            <button type="submit" id="submit-form-login">Entrar</button>
+            <br>
+            <a href="{% url 'singup' %}">cadastro</a>  
+        </form>
+    </div>
+{% endblock %}
 
-        .messages li {
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 8px;
-        }
 
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        h1 {
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        /* Container do Formulário */
-        .form-sing-up {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .form-sing-up input {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .form-sing-up input:focus {
-            border-color: #4a90e2;
-        }
-
-        .form-sing-up button {
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            background-color: #4a90e2;
-            color: #ffffff;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-
-        .form-sing-up button:hover {
-            background-color: #357abd;
-        }
-
-        .form-sing-up button:active {
-            transform: scale(0.98);
-        }
-    </style>
-</head>
-<body>
-
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                    {{ message }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <h1>Você está no login</h1>
-    
-    <form class="form-sing-up" id="id-sing-up" method="POST">
-        {% csrf_token %}
-        <input type="email" placeholder="Digite seu email" id="input-email" name="email">
-        <input type="password" placeholder="Digite sua senha" id="input-password" name="password">
-        <button type="submit" id="submit-form-sing-up">Entrar</button>
-        <a href="singup.html">cadastro</a>
-    </form>
-
-</body>
 
     <script>
         const $ = (elemento) => document.querySelector(elemento);

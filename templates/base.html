@@ -9,8 +9,8 @@
         <link href="{% static 'css/home.css' %}" rel="stylesheet">
         <link href="{% static 'css/base.css' %}" rel="stylesheet">
         <link href="{% static 'css/dev.css' %}" rel="stylesheet">
-
-
+        <link href="{% static 'css/singup.css' %}" rel="stylesheet">
+        <link href="{% static 'css/login.css' %}" rel="stylesheet">
     </head>
 
     <body class="body">
@@ -29,6 +29,9 @@
             <ul class="nav-links" id="nav-list">
                 <li><a class="option_navbar" href="{% url 'dev' %}">desenvolvedores</a></li>
                 <li><a class="option_navbar" href="#contact">contatos</a></li>
+                <li><a class="option_navbar" href="{% url 'login' %}">login</a></li>
+
+
             </ul>
         </nav>
 
