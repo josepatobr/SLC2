@@ -21,54 +21,86 @@
         {% endif %}
 
     
-        <form class="form-sing-up" id="id-sing-up">
+        <form class="form-sing-up" id="id-sing-up" method="POST">{% csrf_token %}
+            
             <h1 class="titulo-form"> Cadastro</h1>
+
             <div class="inputs">
                 <input type="text" placeholder="Digite seu nome" class="camp-inputs" id="input-name">
                 <input type="email" placeholder="Digite seu e-mail" class="camp-inputs" id="input-email">
                 <input type="password" placeholder="Digite sua senha" class="camp-inputs" id="input-password">
             </div>
+            
             <button type="submit" id="submit-form-sing-up">SingUp</button>
             <br>
             <a href="{% url 'login' %}">ja possui uma conta?</a>
 
-            
         </form>
     </div>    
 {% endblock %}
 
 <script>
-    const $ = (elemento) => document.querySelector(elemento);
-
-    $("#id-sing-up").addEventListener("submit", (ev) => {
-        ev.preventDefault();
-
-        const nome = $("#input-name").value.trim();
-        const email = $("#input-email").value.trim();
-        const senha = $("#input-password").value;
-
-        const everything_filled = nome !== "" && email !== "" && senha !== "";
-
-        if (!everything_filled) {
-            alert("Preencha todos os campos antes de enviar.");
-            return;
+    const GetInputs = document.getElementById("id-sing-up");
+        const name = GetInputs.querySelector("#input-name");
+        const email = GetInputs.querySelector("#input-email");
+        const password = GetInputs.querySelector("#input-password");
+    
+        function GetCookie(name){
+            let cookieValue = null;
+            if(document.cookies && document.cookie !== ""){
+                const cookie = document.cookie.split(";");
+                for (let i = 0; i < cookie.length; i++){
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }}
+        }
+        return cookieValue;
         }
 
-        if (nome.length <= 3 || senha.length <= 3) {
-            alert("O nome ou senha precisa ter mais de 3 letras.");
-            return;
-        }
+    GetInputs.addEventListener("submit", function(event){
+        event.preventDefault();
+    
+        const everything_filled = name.value !== "" && email.value !== "" && password.value !== "";
+            if (!everything_filled){
+                alert("preencha todos os campos antes de cadastrar");
+                return;
+            }
 
-        const registered_User = {
-            nome,
-            email,
-            senha,
-        };
+            if (name.value.length <=2){
+                alert("o nome precisa de pelo menos 3 caracterios");
+                return;
+            }
+            if (password.value.length <6){
+                alert("a senha precisa de pelo menos 6 caracterios");
+                return;
+            }
 
-        localStorage.setItem("Users", JSON.stringify(registered_User));
-
-        alert("Cadastro realizado com sucesso!");
-        window.location.href = "./login.html";
-    });
+            const registered_User = {
+                name: name.value,
+                email: email.value,
+                password: password.value,
+            };
+            fetch("/cassino/singup", {
+                method:"POST",
+                headers:{ 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': GetCookie('csrftoken'),
+                },
+                body: JSON.stringify(registered_User),
+            })
+            .then(response=> response.json())
+            .then(data => {
+                if (data.sucesso) {
+                    alert("Usuário cadastrado com sucesso no banco de dados!");
+                    window.location.href = "home.html";
+                } else {
+                    alert("Erro ao cadastrar: " + (data.erro || "Tente novamente."));
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+        });
 </script>
-</html>

@@ -34,19 +34,57 @@
     </div>
 {% endblock %}
 
+<script>
+    const GetInputsLogin = document.getElementById("id-login");
+        const email = document.getElementById("#input-email");
+        const password = document.getElementById("#input-password");
+        
+        function GetCookie(name){
+            let cookieValue = null;
+            if(document.cookies && document.cookie !== ""){
+                const cookie = document.cookie.split(";");
+                for (let i = 0; i < cookie.length; i++){
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }}
+        }
+        return cookieValue;
+        }
+        GetInputsLogin.addEventListener("submit", function(event){
+            event.defaultPrevented();
+        })
 
-
-    <script>
-        const $ = (elemento) => document.querySelector(elemento);
-
-        $("#id-sing-up").addEventListener("submit", (ev) => {
-            const email = $("#input-email").value.trim();
-            const senha = $("#input-password").value;
-
-            if (email === "" || senha === "") {
-                ev.preventDefault();
-                alert("Preencha todos os campos antes de enviar.");
+        const everything_filled = email.value !== "" && password.value !== "";
+            if (!everything_filled){
+                alert("preencha todos os campos antes de cadastrar");
+                return;
             }
-        });
-    </script>
-</html>
+
+            const Login_User = {
+                email: email.value,
+                password: password.value,
+            };
+
+            fetch("cassino/login", {
+                method:"POST",
+                headers: {
+                    "Content_Type": "applocation/json",
+                    "X-CSRFToken":  GetCookie('csrftoken'),
+                },
+                body: JSON.stringify(Login_User),
+            })
+            .then(response => response.json())
+            .data(data => {
+                if (data.sucesso) {
+                    alert("Usuário logado com sucesso!");
+                    window.location.href = "home.html";
+                } else {
+                    alert("Erro ao logar: " + (data.erro || "Tente novamente."));
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            })
+</script>

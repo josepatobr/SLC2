@@ -1,44 +1,48 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate
-from django.contrib import auth
-from django.contrib import messages
-from django.shortcuts import redirect
 from .models import UserSingUp
+import json
+from django.http import JsonResponse
 
 
-def singup(request):
+def singup(request):  
+    if request.method == 'GET':
+        return render(request, "singup.html")
+
     if request.method == "POST":
-        name = request.POST.get("name")
-        email = request.POST.get("email") 
-        password = request.POST.get("password")
+        try:
+            data = json.loads(request.body)
+            name = data.get("name")
+            email = data.get("email")
+            password = data.get("password")
 
-        if len(name) <= 3 or len(password) <= 3:
-            messages.error(request, "O nome ou senha precisa ter mais de 3 letras.")
-            return redirect('singup')
-        
-        if UserSingUp.objects.filter(username=name).exists():
-            messages.error(request, "Este nome de usuário já está em uso.")
-            return redirect('singup')
+            if UserSingUp.objects.filter(email=email).exi():
+                return JsonResponse({'sucess':False, 'erro':'este email ja esta sendo usado em outra conta'})
 
-        UserSingUp.objects.create_user(username=name, email=email, password=password)
-        
-        messages.success(request, "Conta criada com sucesso!")
-        return redirect('home')
-        
-    return render(request, "singup.html")
+            UserSingUp.objects.create(
+                name=name,
+                email=email,
+                password=password
+            )
+            return json({"sucess": True})
 
+        except Exception as e:
+            return JsonResponse({'sucesso': False, 'erro': str(e)})
+
+        
 def login(request):
     if request.method == "GET":
         return render(request, "login.html")
-    elif request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
 
-        user = authenticate(request, email=email, password=password)
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            email = data.get("email")
+            password = data.get("password")
 
-        if user is not None:
-            auth.login(request, user)
-            return redirect('home')
-        
-        messages.error(request, 'Nome ou senha inválidos.')
-        return redirect('login')
+            user = authenticate(request, email=email, password=password)
+            if user is None:
+                return JsonResponse({'sucess': False, 'erro': 'Credenciais inválidas'})
+            return JsonResponse({"sucess": True})
+        except Exception as e:
+            return JsonResponse({"sucess": False, "erro":str(e)})
