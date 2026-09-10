@@ -76,3 +76,14 @@
     display: flex;
     margin: 5px;
 }
+
+.input_navbar{
+    color: white;
+    background: transparent;
+    border: 1px solid white;
+    border-radius: 1rem;
+    width: 500px;
+    display: flex;
+    align-self: center;
+}
+

@@ -20,7 +20,7 @@
             {% endblock %}
         </main>
         
-        <nav class="navbar">
+       <nav class="navbar">
             <div class="nav-logo">
                 <a href="{% url 'home' %}">
                     <img class="logo" src="{% static 'logo_empresa/logo_SLC2.png' %}" width="70" height="70" alt="Logo">
@@ -30,6 +30,13 @@
                 <li><a class="option_navbar" href="{% url 'dev' %}">desenvolvedores</a></li>
                 <li><a class="option_navbar" href="#contact">contatos</a></li>
                 <li><a class="option_navbar" href="{% url 'login' %}">login</a></li>
+                <li>
+                    <form action="{% url 'search' %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="text" name="input_navbar" class="input_navbar" placeholder="Pesquisar...">
+                        <button type="submit" class="btn_pesquisa">Pesquisa</button>
+                    </form>
+                </li>
             </ul>
         </nav>
 
