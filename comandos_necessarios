@@ -1,0 +1,2 @@
+uv run streamlit run dashboard/main.py
+uv run python manage.py test (para testar os test q eu fiz)

@@ -10,7 +10,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 
 import django
 django.setup()
-#------
 
 
 import streamlit as st
@@ -24,7 +23,7 @@ st.title("📊 Painel de Detalhes do Produto")
 home = "http://localhost:8000/cassino/home/"
 
 def dashboard():
-  #aqui eu pego o id do url
+  #aqui eu pego o id da url
   produto_id = st.query_params.get("product_id")
 
   if not produto_id:
