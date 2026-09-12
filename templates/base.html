@@ -29,10 +29,13 @@
             <ul class="nav-links" id="nav-list">
                 <li><a class="option_navbar" href="{% url 'dev' %}">desenvolvedores</a></li>
                 <li><a class="option_navbar" href="#contact">contatos</a></li>
-                <li><a class="option_navbar" href="{% url 'login' %}">login</a></li>
+                {% if user.is_authenticated %}
+
+                {% else %}
+                    <li><a class="option_navbar" href="{% url 'login' %}">login</a></li>
+                {% endif %}
                 <li>
-                    <form action="{% url 'search' %}" method="POST" style="display: inline;">
-                        {% csrf_token %}
+                    <form action="{% url 'search' %}" method="get" style="display: inline;">
                         <input type="text" name="input_navbar" class="input_navbar" placeholder="Pesquisar...">
                         <button type="submit" class="btn_pesquisa">Pesquisa</button>
                     </form>

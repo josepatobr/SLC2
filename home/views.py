@@ -17,9 +17,13 @@ def dev(request):
 
 
 def search(request):
-    input_search = request.POST.get("input_navbar")
+    input_search = request.GET.get("input_navbar")
+    if not input_search:
+        return render(request, "search_erro.html")
+
     search_database = Product.objects.filter(name_product__icontains=input_search)
+    
     if not search_database.exists():
         return render(request, "search_erro.html")
     else:
-        return render(request, "search_sucess.html", {"search_database":search_database})
+        return render(request, "search_sucess.html", {"search_database": search_database})

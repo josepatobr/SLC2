@@ -3,4 +3,22 @@
 
 {% block content %}
     <h2> produto encontrado com sucesso </h2>>
+
+    <div class="home">    
+        <br><br>
+        <h1 class="titulo">produto encontrado</h1>
+    
+        <div class="card-produto">  
+            {% for search_database in search_database %}
+                <div class="div-produto">
+                    <img src="{{ search_database.product_image.url }}"  alt="{{ search_database.name_product }}" width="300" height="300">
+                    <p class="inf_produto_titulo">{{ search_database.name_product }}</p>
+                    <p id="inf_produto">R$: {{ search_database.price }}</p>
+                    <p id="inf_produto">em estoque: {{ search_database.stock_quantity }}</p>
+                    <a class="url_produto" href="{{ STREAMLIT_URL }}/?product_id={{ product.id }}" target="_blank">detalhes do produto</a>                
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
 {% endblock %}
